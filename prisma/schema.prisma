@@ -12,3 +12,13 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Guardia {
+  id          String   @unique @default(uuid())
+  inicio      DateTime
+  sector      String
+  profesional String?
+  horas       Int
+  valor       Int
+  descripcion String?
+}

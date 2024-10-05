@@ -1,6 +1,5 @@
 "use client";
 import { Calendar } from "@/components/ui/calendar";
-import { Dispatch, SetStateAction, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -10,6 +9,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { format } from "date-fns";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Form,
   FormControl,
@@ -37,38 +37,15 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { CalendarIcon } from "@radix-ui/react-icons";
 
-export default function CargarGuardia() {
-  const [date, setDate] = useState<Date | undefined>(new Date());
-  const [open, setOpen] = useState(false);
-
+export default function DialogGuardia() {
   return (
-    <div>
-      <Calendar
-        mode="single"
-        selected={date}
-        onSelect={setDate}
-        className="rounded-md border"
-        onDayClick={() => setOpen(true)}
-      />
-      <DialogGuardia open={open} setOpen={setOpen} />
-    </div>
-  );
-}
-
-export function DialogGuardia({
-  open,
-  setOpen,
-}: {
-  open: boolean;
-  setOpen: Dispatch<SetStateAction<boolean>>;
-}) {
-  return (
-    <Dialog open={open} onOpenChange={() => setOpen(!open)}>
-      <DialogTrigger asChild></DialogTrigger>
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button>Cargar Guardia</Button>
+      </DialogTrigger>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle>Nueva Guardia</DialogTitle>
@@ -84,15 +61,12 @@ const formSchema = z.object({
   sector: z.string().min(2, {
     message: "Seleccione una option",
   }),
-  duracion: z.number().gt(2, { message: "Ingrese un numero valido" }),
-  inicio: z.date({
-    required_error: "Seleccione una fecha de inicio.",
-  }),
-  time: z.string().datetime(),
-  valor: z.number().gt(1000, { message: "Ingrese un valor" }),
-  profesional: z.string().min(2, {
-    message: "Seleccione una option",
-  }),
+  horas: z.coerce.number().gt(2, { message: "Ingrese un numero valido" }),
+  inicio: z.date(),
+  time: z.string().optional(),
+  valor: z.coerce.number().gt(1000, { message: "Ingrese un valor" }),
+  profesional: z.string().optional(),
+  descripcion: z.string().optional(),
 });
 
 export function GuardiaForm() {
@@ -100,18 +74,34 @@ export function GuardiaForm() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       sector: "",
-      duracion: 0,
+      horas: 0,
       time: "00:00",
       valor: 0,
       profesional: "",
+      descripcion: "",
     },
   });
 
   // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    if (!values.time) return;
+    values.inicio.setHours(Number(values.time?.substring(0, 2)));
+    values.inicio.setMinutes(Number(values.time?.substring(3)));
+
+    delete values.time;
+    console.log("se envia", values);
+    fetch("/cargar", {
+      body: JSON.stringify(values),
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error("Error in the server");
+        return res.json();
+      })
+      .then((data) => console.log(data));
   }
 
   return (
@@ -147,7 +137,7 @@ export function GuardiaForm() {
           <div className="w-1/4">
             <FormField
               control={form.control}
-              name="duracion"
+              name="horas"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Duracion</FormLabel>
@@ -191,11 +181,9 @@ export function GuardiaForm() {
                     <PopoverContent className="w-auto p-0" align="start">
                       <Calendar
                         mode="single"
-                        selected={field.value}
+                        selected={new Date(field.value)}
                         onSelect={field.onChange}
-                        disabled={(date) =>
-                          date < new Date() || date < new Date("1900-01-01")
-                        }
+                        disabled={(date) => date < new Date()}
                         initialFocus
                       />
                     </PopoverContent>
@@ -214,7 +202,7 @@ export function GuardiaForm() {
                   <FormLabel>Hora</FormLabel>
 
                   <FormControl>
-                    <Input placeholder="shadcn" type="time" {...field} />
+                    <Input type="time" {...field} />
                   </FormControl>
 
                   <FormMessage />
@@ -252,12 +240,30 @@ export function GuardiaForm() {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="1">Rodrigo Perez</SelectItem>
-                  <SelectItem value="2">Juan Carilo</SelectItem>
-                  <SelectItem value="3">Gustavo Ortega</SelectItem>
-                  <SelectItem value="4">Pedro Contanti</SelectItem>
+                  <SelectItem value="Rodrigo Perez">Rodrigo Perez</SelectItem>
+                  <SelectItem value="Juan Carilo">Juan Carilo</SelectItem>
+                  <SelectItem value="Gustavo Ortega">Gustavo Ortega</SelectItem>
+                  <SelectItem value="Pedro Contanti">Pedro Contanti</SelectItem>
                 </SelectContent>
               </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="descripcion"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Descripcion</FormLabel>
+              <FormControl>
+                <Textarea
+                  placeholder="Detalles a tener en cuenta en la guardia..."
+                  className="resize-none"
+                  {...field}
+                />
+              </FormControl>
+
               <FormMessage />
             </FormItem>
           )}
