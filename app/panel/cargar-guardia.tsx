@@ -140,7 +140,7 @@ export function GuardiaForm() {
               name="horas"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Duracion</FormLabel>
+                  <FormLabel>Horas</FormLabel>
                   <FormControl>
                     <Input placeholder="shadcn" type="number" {...field} />
                   </FormControl>
@@ -216,7 +216,7 @@ export function GuardiaForm() {
               name="valor"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Valor</FormLabel>
+                  <FormLabel>Valor $</FormLabel>
                   <FormControl>
                     <Input placeholder="shadcn" {...field} />
                   </FormControl>

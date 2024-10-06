@@ -2,15 +2,18 @@ import React from "react";
 import CargarGuardia from "./cargar-guardia";
 import Calendar from "./calendar";
 import DialogGuardia from "./cargar-guardia";
+import prisma from "@/lib/db";
 
-export default function page() {
+export default async function page() {
+  const events = await prisma.guardia.findMany();
+
   return (
-    <div className="container mx-auto">
-      <div className="flex">
-        <h1>Panel</h1>
+    <div className="container mx-auto my-16">
+      <div className="flex justify-between mb-4">
+        <h1 className="text-2xl font-semibold">Hospital X</h1>
         <DialogGuardia />
       </div>
-      <Calendar />
+      <Calendar events={events} />
     </div>
   );
 }
