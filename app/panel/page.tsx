@@ -8,7 +8,7 @@ export default async function page() {
   const events = await prisma.guardia.findMany();
 
   return (
-    <div className="container mx-auto my-16">
+    <div className="container mx-auto my-16 max-w-[1100px]">
       <div className="flex justify-between mb-4">
         <h1 className="text-2xl font-semibold">Hospital X</h1>
         <DialogGuardia />

@@ -2,6 +2,7 @@
 import { Guardia } from "@prisma/client";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid"; // a plugin!
+import { GuardiaPopover } from "./guardia-popover";
 type EventCalendarT = {
   id: string;
   title: string;
@@ -11,15 +12,27 @@ type EventCalendarT = {
 
 export default function Calendar({ events }: { events: Guardia[] }) {
   const eventFormat: EventCalendarT[] = events.map((item) => {
+    const endDay = new Date(item.inicio);
+    endDay.setHours(item.inicio.getHours() + item.horas);
+    console.log(endDay);
     return {
       id: item.id,
-      title: `${item.profesional} ${item.sector}`,
+      title: `${item.profesional ? item.profesional?.split(" ")[1] : ""} ${
+        item.sector
+      }`,
       start: item.inicio,
-      end: new Date(item.inicio.setHours(item.inicio.getHours() + item.horas)),
+      end: endDay,
+      extendedProps: {
+        profesional: item.profesional,
+        sector: item.sector,
+        valor: item.valor,
+        descripcion: item.descripcion,
+        horas: item.horas,
+      },
     };
   });
   return (
-    <section className="max-w-900px">
+    <section className="w-full">
       <FullCalendar
         plugins={[dayGridPlugin]}
         initialView="dayGridMonth"
@@ -36,31 +49,14 @@ export default function Calendar({ events }: { events: Guardia[] }) {
         weekends={true}
         locale={"es"}
         events={eventFormat}
-        eventContent={renderEventContent}
-        eventDidMount={(e) =>
-          console.log(
-            e.event.start
-              ?.toLocaleDateString("es-AR", { hour: "2-digit" })
-              .split(",")[1]
-          )
-        }
+        eventContent={GuardiaPopover}
+        eventBorderColor=""
+        // eventClick={(e) => console.log(e)}
+        // eventDidMount={(e) =>
+        //   console.log(
+        //    )
+        // }
       />
     </section>
-  );
-}
-
-function renderEventContent(eventInfo) {
-  return (
-    <div className="flex flex-col justify-start">
-      <b>{eventInfo.event._def.title.split(" ")[1]}</b>
-      <p>
-        Desde
-        {
-          eventInfo.event.start
-            ?.toLocaleDateString("es-AR", { hour: "2-digit" })
-            .split(",")[1]
-        }
-      </p>
-    </div>
   );
 }
