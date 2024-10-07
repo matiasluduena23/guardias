@@ -14,7 +14,7 @@ export default function Calendar({ events }: { events: Guardia[] }) {
   const eventFormat: EventCalendarT[] = events.map((item) => {
     const endDay = new Date(item.inicio);
     endDay.setHours(item.inicio.getHours() + item.horas);
-    console.log(endDay);
+
     return {
       id: item.id,
       title: `${item.profesional ? item.profesional?.split(" ")[1] : ""} ${
@@ -28,6 +28,7 @@ export default function Calendar({ events }: { events: Guardia[] }) {
         valor: item.valor,
         descripcion: item.descripcion,
         horas: item.horas,
+        estado: item.estado,
       },
     };
   });

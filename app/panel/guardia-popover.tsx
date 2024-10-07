@@ -12,19 +12,20 @@ type PropsAtt = {
   valor: number;
   descripcion: string;
   horas: number;
+  estado: "PENDIENTE" | "VACANTE" | "CUBIERTA";
 };
 
 export function GuardiaPopover(eventInfo: any) {
-  const { profesional, sector, valor, descripcion, horas }: PropsAtt =
+  const { profesional, sector, valor, descripcion, horas, estado }: PropsAtt =
     eventInfo.event.extendedProps;
-  console.log(eventInfo);
   return (
     <Popover>
       <PopoverTrigger asChild>
         <Button
           className={cn(
             `flex gap-1 px-1 justify-start cursor-pointer  w-full h-auto bg-green-500 hover:bg-green-400`,
-            !profesional && "bg-orange-500 hover:bg-orange-400"
+            estado === "VACANTE" && "bg-orange-500 hover:bg-orange-400",
+            estado === "PENDIENTE" && "bg-yellow-500 hover:bg-yellow-400"
           )}
         >
           <b>{eventInfo.event._def.title}</b>

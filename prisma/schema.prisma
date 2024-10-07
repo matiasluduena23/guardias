@@ -21,4 +21,11 @@ model Guardia {
   horas       Int
   valor       Int
   descripcion String?
+  estado      Estado   @default(CUBIERTA)
+}
+
+enum Estado {
+  PENDIENTE
+  VACANTE
+  CUBIERTA
 }

@@ -3,6 +3,7 @@ import CargarGuardia from "./cargar-guardia";
 import Calendar from "./calendar";
 import DialogGuardia from "./cargar-guardia";
 import prisma from "@/lib/db";
+import Provider from "./Provider";
 
 export default async function page() {
   const events = await prisma.guardia.findMany();
