@@ -14,12 +14,12 @@ export const guardiaSchema = z.object({
   sector: z.string().min(2, {
     message: "Seleccione una option",
   }),
-  horas: z.coerce.number().gt(2, { message: "Ingrese un numero valido" }),
-  inicio: z.coerce.date({ message: "Ingrese una fecha valida" }),
+  horas: z.coerce.number().gt(2, { message: "Ingrese un numero" }),
+  inicio: z.coerce.date({ message: "Ingrese una fecha" }),
   time: z
     .string()
     .regex(/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/, {
-      message: "Ingrese una hora valida",
+      message: "Ingrese una hora",
     })
     .optional(),
   valor: z.coerce.number().gt(1000, { message: "Ingrese un valor" }),
