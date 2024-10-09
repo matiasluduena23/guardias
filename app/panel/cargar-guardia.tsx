@@ -50,12 +50,11 @@ export default function DialogGuardia({ medicos }: { medicos: Medicos[] }) {
   };
 
   useEffect(() => {
+    console.log(state);
     if (state.message === "guardia Added") {
       toast({
         title: "Guardia agregada",
-        description: date!.toLocaleDateString("es-AR", {
-          dateStyle: "full",
-        }),
+        description: format(date!, "PPP - HH:mm", { locale: es }),
       });
       setOpen(false);
     }
@@ -73,7 +72,7 @@ export default function DialogGuardia({ medicos }: { medicos: Medicos[] }) {
         </DialogHeader>
         <form className="space-y-4" onSubmit={handleSubmit}>
           <div className="flex items-center gap-2">
-            <div className="w-3/4">
+            <div className="w-3/4 relative">
               <Label>Fecha</Label>
               <Popover>
                 <PopoverTrigger asChild>
@@ -81,14 +80,15 @@ export default function DialogGuardia({ medicos }: { medicos: Medicos[] }) {
                     variant={"outline"}
                     className={cn(
                       "w-full justify-start text-left font-normal",
-                      !date && "text-muted-foreground"
+                      !date && "text-muted-foreground",
+                      state.error?.fieldErrors.inicio && "border-rose-500"
                     )}
                   >
                     <CalendarIcon className="mr-2 h-4 w-4" />
                     {date ? (
                       format(date, "PPP - HH:mm", { locale: es })
                     ) : (
-                      <span>Elegir fecha</span>
+                      <span>Elegir fecha y hora de inicio</span>
                     )}
                   </Button>
                 </PopoverTrigger>
@@ -99,12 +99,27 @@ export default function DialogGuardia({ medicos }: { medicos: Medicos[] }) {
                     onSelect={(e) => e !== undefined && setDate(e)}
                     disabled={(date) => date < new Date()}
                     initialFocus
+                    className={`${
+                      state.error?.fieldErrors.inicio ? "border-rose-500" : ""
+                    }`}
                   />
                   <div className="p-3 border-t border-border">
                     <TimePicker setDate={setDate} date={date} />
                   </div>
                 </PopoverContent>
               </Popover>
+              {state.error?.fieldErrors.valor && (
+                <>
+                  {state.error.fieldErrors.valor.map((err, index) => (
+                    <span
+                      key={index}
+                      className="text-rose-500 text-[12px] absolute -bottom-4 left-0"
+                    >
+                      {err}
+                    </span>
+                  ))}
+                </>
+              )}
             </div>
 
             <div className="w-1/4 relative">
@@ -187,14 +202,14 @@ export default function DialogGuardia({ medicos }: { medicos: Medicos[] }) {
 
           <div>
             <Label>Profesional</Label>
-            <Select name="profesional">
+            <Select name="medicosId">
               <SelectTrigger>
                 <SelectValue placeholder="Seleccione un profesional" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="vacante">--- Vacante ---</SelectItem>
                 {medicos.map((medico) => (
-                  <SelectItem value={medico.id}>
+                  <SelectItem key={medico.id} value={medico.id}>
                     <div className="flex items-center gap-4">
                       <Image
                         src={medico.imagen}

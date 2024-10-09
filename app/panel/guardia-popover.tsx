@@ -49,7 +49,7 @@ export function GuardiaPopover(eventInfo: any) {
             })}
           </strong>
 
-          {!profesional && <Button className="block">Publicar</Button>}
+          <Button className="block">Editar</Button>
         </div>
       </PopoverContent>
     </Popover>
