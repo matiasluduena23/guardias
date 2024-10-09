@@ -15,9 +15,11 @@ export const guardiaSchema = z.object({
     message: "Seleccione una option",
   }),
   horas: z.coerce.number().gt(2, { message: "Ingrese un numero" }),
-  inicio: z.coerce.date({ message: "Ingrese una fecha" }),
+  inicio: z.coerce.date({
+    message: "Ingrese una fecha",
+  }),
   valor: z.coerce.number().gt(1000, { message: "Ingrese un valor" }),
-  profesional: z.string().optional(),
+  medicosId: z.string().optional(),
   descripcion: z.string().optional(),
 });
 
@@ -29,10 +31,11 @@ export type EventCalendarT = {
 };
 
 export type PropsAtt = {
-  profesional: string;
+  medico: string;
+  image: string;
   sector: string;
   valor: number;
   descripcion: string;
   horas: number;
-  estado: "PENDIENTE" | "VACANTE" | "CUBIERTA";
+  estado: "VACANTE" | "ASIGNADA";
 };

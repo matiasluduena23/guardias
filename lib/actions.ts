@@ -13,7 +13,7 @@ type FormState = {
     inicio?: string[];
     valor?: string[];
     time?: string[];
-    profesional?: string[];
+    medicosId?: string[];
     descripcion?: string[];
   };
 };
@@ -22,7 +22,6 @@ export async function addGuardia(state: FormState, formData: FormData) {
   const values = Object.fromEntries(formData);
   const validateFields = guardiaSchema.safeParse(values);
 
-  console.log("data", validateFields.success);
   if (!validateFields.success) {
     return {
       message: "Error en los datos ",
@@ -30,9 +29,7 @@ export async function addGuardia(state: FormState, formData: FormData) {
     };
   }
 
-  const estado: Estado = validateFields.data.profesional
-    ? "ASIGNADO"
-    : "VACANTE";
+  const estado: Estado = validateFields.data.medicosId ? "ASIGNADO" : "VACANTE";
 
   const data = { ...validateFields.data, estado };
 

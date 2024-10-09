@@ -50,7 +50,6 @@ export default function DialogGuardia({ medicos }: { medicos: Medicos[] }) {
   };
 
   useEffect(() => {
-    console.log(state);
     if (state.message === "guardia Added") {
       toast({
         title: "Guardia agregada",
@@ -108,9 +107,9 @@ export default function DialogGuardia({ medicos }: { medicos: Medicos[] }) {
                   </div>
                 </PopoverContent>
               </Popover>
-              {state.error?.fieldErrors.valor && (
+              {state.error?.fieldErrors.inicio && (
                 <>
-                  {state.error.fieldErrors.valor.map((err, index) => (
+                  {state.error.fieldErrors.inicio.map((err, index) => (
                     <span
                       key={index}
                       className="text-rose-500 text-[12px] absolute -bottom-4 left-0"
@@ -207,7 +206,6 @@ export default function DialogGuardia({ medicos }: { medicos: Medicos[] }) {
                 <SelectValue placeholder="Seleccione un profesional" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="vacante">--- Vacante ---</SelectItem>
                 {medicos.map((medico) => (
                   <SelectItem key={medico.id} value={medico.id}>
                     <div className="flex items-center gap-4">

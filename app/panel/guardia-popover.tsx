@@ -6,9 +6,11 @@ import {
 } from "@/components/ui/popover";
 import { PropsAtt } from "@/lib/definitions";
 import { cn } from "@/lib/utils";
+import { Half1Icon } from "@radix-ui/react-icons";
+import Image from "next/image";
 
 export function GuardiaPopover(eventInfo: any) {
-  const { profesional, sector, valor, descripcion, horas, estado }: PropsAtt =
+  const { medico, image, sector, valor, descripcion, horas, estado }: PropsAtt =
     eventInfo.event.extendedProps;
   return (
     <Popover>
@@ -16,8 +18,7 @@ export function GuardiaPopover(eventInfo: any) {
         <Button
           className={cn(
             `flex gap-1 px-1 justify-start cursor-pointer  w-full h-auto bg-green-500 hover:bg-green-400`,
-            estado === "VACANTE" && "bg-orange-500 hover:bg-orange-400",
-            estado === "PENDIENTE" && "bg-yellow-500 hover:bg-yellow-400"
+            estado === "VACANTE" && "bg-orange-500 hover:bg-orange-400"
           )}
         >
           <b>{eventInfo.event._def.title}</b>
@@ -28,7 +29,20 @@ export function GuardiaPopover(eventInfo: any) {
           {sector}
         </span>
         <div className="space-y-2 ">
-          <h1 className="font-semibold ">{profesional}</h1>
+          {medico ? (
+            <div className="flex items-center gap-4">
+              <Image
+                src={image}
+                alt={medico}
+                width={30}
+                height={30}
+                className="rounded-full"
+              />
+              <h1 className="font-semibold ">{medico}</h1>
+            </div>
+          ) : (
+            <h1>Vacante</h1>
+          )}
 
           <p>
             Desde:

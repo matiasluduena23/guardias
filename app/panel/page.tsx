@@ -14,7 +14,7 @@ export default async function page() {
         <h1 className="text-2xl font-semibold">Hospital X</h1>
         <DialogGuardia medicos={medicos} />
       </div>
-      <Calendar events={events} />
+      <Calendar events={events} medicos={medicos} />
     </div>
   );
 }
