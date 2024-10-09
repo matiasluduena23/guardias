@@ -6,6 +6,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { format } from "date-fns";
+import { es } from "date-fns/locale";
 import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
@@ -32,16 +33,19 @@ import React from "react";
 import { useFormState, useFormStatus } from "react-dom";
 import { addGuardia } from "@/lib/actions";
 import { toast } from "@/hooks/use-toast";
+import { Medicos } from "@prisma/client";
+import Image from "next/image";
+import { TimePicker } from "@/components/ui/time-picker";
 
-export default function DialogGuardia() {
+export default function DialogGuardia({ medicos }: { medicos: Medicos[] }) {
   const [state, formAction] = useFormState(addGuardia, { message: "" });
   const [open, setOpen] = useState(false);
-  const [date, setDate] = React.useState<Date>(new Date());
+  const [date, setDate] = React.useState<Date>();
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-    formData.set("inicio", date.toString());
+    if (date) formData.set("inicio", date.toString());
     formAction(formData);
   };
 
@@ -49,7 +53,7 @@ export default function DialogGuardia() {
     if (state.message === "guardia Added") {
       toast({
         title: "Guardia agregada",
-        description: date.toLocaleDateString("es-AR", {
+        description: date!.toLocaleDateString("es-AR", {
           dateStyle: "full",
         }),
       });
@@ -68,6 +72,65 @@ export default function DialogGuardia() {
           <DialogDescription>Complete todos los campos</DialogDescription>
         </DialogHeader>
         <form className="space-y-4" onSubmit={handleSubmit}>
+          <div className="flex items-center gap-2">
+            <div className="w-3/4">
+              <Label>Fecha</Label>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant={"outline"}
+                    className={cn(
+                      "w-full justify-start text-left font-normal",
+                      !date && "text-muted-foreground"
+                    )}
+                  >
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {date ? (
+                      format(date, "PPP - HH:mm", { locale: es })
+                    ) : (
+                      <span>Elegir fecha</span>
+                    )}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0">
+                  <Calendar
+                    mode="single"
+                    selected={date}
+                    onSelect={(e) => e !== undefined && setDate(e)}
+                    disabled={(date) => date < new Date()}
+                    initialFocus
+                  />
+                  <div className="p-3 border-t border-border">
+                    <TimePicker setDate={setDate} date={date} />
+                  </div>
+                </PopoverContent>
+              </Popover>
+            </div>
+
+            <div className="w-1/4 relative">
+              <Label>Valor $</Label>
+              <Input
+                name="valor"
+                placeholder="$10000"
+                type="number"
+                className={`${
+                  state.error?.fieldErrors.horas ? "border-rose-500" : ""
+                }`}
+              />
+              {state.error?.fieldErrors.valor && (
+                <>
+                  {state.error.fieldErrors.valor.map((err, index) => (
+                    <span
+                      key={index}
+                      className="text-rose-500 text-[12px] absolute -bottom-4 left-0"
+                    >
+                      {err}
+                    </span>
+                  ))}
+                </>
+              )}
+            </div>
+          </div>
           <div className="flex items-center gap-2 relative">
             <div className="w-3/4">
               <Label>Sector</Label>
@@ -121,61 +184,7 @@ export default function DialogGuardia() {
               )}
             </div>
           </div>
-          <div className="flex items-center gap-2">
-            <div className="w-2/4">
-              <Label>Fecha</Label>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant={"outline"}
-                    className={cn(
-                      "w-full justify-start text-left font-normal",
-                      !date && "text-muted-foreground"
-                    )}
-                  >
-                    <CalendarIcon className="mr-2 h-4 w-4" />
-                    {date ? format(date, "PPP") : <span>Elegir fecha</span>}
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0">
-                  <Calendar
-                    mode="single"
-                    selected={date}
-                    onSelect={(e) => e !== undefined && setDate(e)}
-                    disabled={(date) => date < new Date()}
-                    initialFocus
-                  />
-                </PopoverContent>
-              </Popover>
-            </div>
-            <div className="w-1/4">
-              <Label>Hora</Label>
-              <Input name="time" defaultValue={"00:00"} type="time" />
-            </div>
-            <div className="w-1/4 relative">
-              <Label>Valor $</Label>
-              <Input
-                name="valor"
-                placeholder="$10000"
-                type="number"
-                className={`${
-                  state.error?.fieldErrors.horas ? "border-rose-500" : ""
-                }`}
-              />
-              {state.error?.fieldErrors.valor && (
-                <>
-                  {state.error.fieldErrors.valor.map((err, index) => (
-                    <span
-                      key={index}
-                      className="text-rose-500 text-[12px] absolute -bottom-4 left-0"
-                    >
-                      {err}
-                    </span>
-                  ))}
-                </>
-              )}
-            </div>
-          </div>
+
           <div>
             <Label>Profesional</Label>
             <Select name="profesional">
@@ -183,10 +192,23 @@ export default function DialogGuardia() {
                 <SelectValue placeholder="Seleccione un profesional" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="Rodrigo Perez">Rodrigo Perez</SelectItem>
-                <SelectItem value="Juan Carilo">Juan Carilo</SelectItem>
-                <SelectItem value="Gustavo Ortega">Gustavo Ortega</SelectItem>
-                <SelectItem value="Pedro Contanti">Pedro Contanti</SelectItem>
+                <SelectItem value="vacante">--- Vacante ---</SelectItem>
+                {medicos.map((medico) => (
+                  <SelectItem value={medico.id}>
+                    <div className="flex items-center gap-4">
+                      <Image
+                        src={medico.imagen}
+                        alt={medico.apellido}
+                        width={30}
+                        height={30}
+                        className="rounded-full"
+                      />
+                      <span>
+                        {medico.nombre} {medico.apellido}
+                      </span>
+                    </div>
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>

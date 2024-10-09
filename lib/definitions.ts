@@ -26,3 +26,19 @@ export const guardiaSchema = z.object({
   profesional: z.string().optional(),
   descripcion: z.string().optional(),
 });
+
+export type EventCalendarT = {
+  id: string;
+  title: string;
+  start: Date;
+  end: Date;
+};
+
+export type PropsAtt = {
+  profesional: string;
+  sector: string;
+  valor: number;
+  descripcion: string;
+  horas: number;
+  estado: "PENDIENTE" | "VACANTE" | "CUBIERTA";
+};

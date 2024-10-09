@@ -7,7 +7,7 @@ import {
 import { PropsAtt } from "@/lib/definitions";
 import { cn } from "@/lib/utils";
 
-export function GuardiaPopover(eventInfo: any) {
+export function ProfesionalPopover(eventInfo: any) {
   const { profesional, sector, valor, descripcion, horas, estado }: PropsAtt =
     eventInfo.event.extendedProps;
   return (

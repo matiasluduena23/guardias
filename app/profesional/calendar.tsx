@@ -2,11 +2,12 @@
 import { Guardias } from "@prisma/client";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid"; // a plugin!
-import { GuardiaPopover } from "./guardia-popover";
 import { eventFormat } from "@/lib/utils";
+import { ProfesionalPopover } from "./profesional-popover";
 
 export default function Calendar({ events }: { events: Guardias[] }) {
   const eventFormated = eventFormat(events);
+  console.log(eventFormated);
   return (
     <section className="w-full">
       <FullCalendar
@@ -25,7 +26,7 @@ export default function Calendar({ events }: { events: Guardias[] }) {
         weekends={true}
         locale={"es"}
         events={eventFormated}
-        eventContent={GuardiaPopover}
+        eventContent={ProfesionalPopover}
         eventBorderColor=""
       />
     </section>

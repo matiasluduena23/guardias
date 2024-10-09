@@ -13,19 +13,47 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Guardia {
-  id          String   @unique @default(uuid())
+model Guardias {
+  id          String        @unique @default(uuid())
   inicio      DateTime
   sector      String
-  profesional String?
   horas       Int
   valor       Int
   descripcion String?
-  estado      Estado   @default(CUBIERTA)
+  estado      Estado
+  Medicos     Medicos?      @relation(fields: [medicosId], references: [id])
+  medicosId   String?
+  Solicitudes Solicitudes[]
 }
 
 enum Estado {
-  PENDIENTE
   VACANTE
-  CUBIERTA
+  ASIGNADO
+}
+
+model Medicos {
+  id           String        @unique @default(uuid())
+  nombre       String
+  apellido     String
+  matricula    Int
+  especialidad String
+  imagen       String
+  guardia      Guardias[]
+  Solicitudes  Solicitudes[]
+}
+
+model Solicitudes {
+  id        String           @unique @default(uuid())
+  estado    Estado_Solicitud
+  createAt  DateTime         @default(now())
+  Medicos   Medicos?         @relation(fields: [medicosId], references: [id])
+  medicosId String?
+  guardiaId String
+  Guardias  Guardias         @relation(fields: [guardiaId], references: [id])
+}
+
+enum Estado_Solicitud {
+  PENDIENTE
+  APROBADA
+  RECHAZADA
 }
