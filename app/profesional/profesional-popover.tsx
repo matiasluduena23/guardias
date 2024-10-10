@@ -16,8 +16,7 @@ export function ProfesionalPopover(eventInfo: any) {
     idMedico,
     sector,
     valor,
-    descripcion,
-    horas,
+
     estado,
     estadoSolicitud,
   }: PropsAtt = eventInfo.event.extendedProps;

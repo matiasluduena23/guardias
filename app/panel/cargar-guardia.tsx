@@ -57,7 +57,7 @@ export default function DialogGuardia({ medicos }: { medicos: Medicos[] }) {
       });
       setOpen(false);
     }
-  }, [state]);
+  }, [state, date]);
 
   return (
     <Dialog open={open} onOpenChange={() => setOpen(!open)}>

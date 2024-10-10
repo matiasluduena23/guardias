@@ -1,5 +1,4 @@
-import { HeartPulseIcon } from "lucide-react";
-import Image from "next/image";
+import { HeartPulseIcon, User2Icon } from "lucide-react";
 
 export default function Home() {
   return (
@@ -22,13 +21,7 @@ export default function Home() {
             href="/panel"
             rel="noopener noreferrer"
           >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
+            <HeartPulseIcon />
             Institución
           </a>
           <a
@@ -36,6 +29,7 @@ export default function Home() {
             href="/profesional"
             rel="noopener noreferrer"
           >
+            <User2Icon className="mr-1" />
             Profesional
           </a>
         </div>

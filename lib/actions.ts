@@ -49,7 +49,7 @@ export async function addGuardia(state: FormState, formData: FormData) {
 export async function createSolicitud(idMedico: string, idGuardia: string) {
   console.log("datos", idMedico, idGuardia);
   try {
-    const solicitud = await prisma.solicitudes.create({
+    await prisma.solicitudes.create({
       data: {
         guardiaId: idGuardia,
         medicosId: idMedico,

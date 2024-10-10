@@ -1,6 +1,5 @@
 "use client";
 
-import { Guardias, Solicitudes, Medicos } from "@prisma/client";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import Image from "next/image";
@@ -14,10 +13,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useState } from "react";
 
 export default function CardSolicitud({ guardia }: { guardia: any }) {
-  const [horaHasta, setHoraHasta] = useState();
   return (
     <div className="max-w-[600px] mx-auto">
       <Card className="p-8">
@@ -41,29 +38,41 @@ export default function CardSolicitud({ guardia }: { guardia: any }) {
             </span>
           </CardDescription>
 
-          <strong>Valor: {guardia.valor}</strong>
+          <strong>Valor: ${guardia.valor}</strong>
         </CardHeader>
 
         <CardContent>
-          {guardia?.Solicitudes.map((item: any) => (
-            <Card className="border p-4 flex justify-between items-center">
-              <div className="flex items-center gap-4">
-                <Image
-                  src={item.Medicos?.imagen!}
-                  alt={item.Medicos?.apellido!}
-                  width={30}
-                  height={30}
-                  className="rounded-full object-cover"
-                />
-                <p>
-                  <b>Dr/a.</b> {item.Medicos?.nombre} {item.Medicos?.apellido}{" "}
-                </p>
-              </div>
-              <Button onClick={async () => confimarSolicitud(item.id)}>
-                Aceptar Solicitud
-              </Button>
-            </Card>
-          ))}
+          {guardia?.Solicitudes.lenght > 0 ? (
+            <>
+              {guardia?.Solicitudes.map((item: any, index: number) => (
+                <Card
+                  key={index}
+                  className="border p-4 flex justify-between items-center"
+                >
+                  <div className="flex items-center gap-4">
+                    <Image
+                      src={item.Medicos?.imagen!}
+                      alt={item.Medicos?.apellido!}
+                      width={30}
+                      height={30}
+                      className="rounded-full object-cover"
+                    />
+                    <p>
+                      <b>Dr/a.</b> {item.Medicos?.nombre}{" "}
+                      {item.Medicos?.apellido}{" "}
+                    </p>
+                  </div>
+                  <Button onClick={async () => confimarSolicitud(item.id)}>
+                    Aceptar Solicitud
+                  </Button>
+                </Card>
+              ))}
+            </>
+          ) : (
+            <p className="text-center text-gray-400 font-semibold">
+              No hay solicitudes enviadas para esta guardia.
+            </p>
+          )}
         </CardContent>
       </Card>
     </div>

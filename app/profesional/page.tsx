@@ -3,13 +3,8 @@ import Calendar from "./calendar";
 import prisma from "@/lib/db";
 import MedicoProvider from "../context/MedicoProvider";
 import { PerfilPopover } from "./perfil-popover";
-import {
-  BookHeartIcon,
-  HeartIcon,
-  HeartOffIcon,
-  HeartPulseIcon,
-} from "lucide-react";
-import { HeartFilledIcon } from "@radix-ui/react-icons";
+import { HeartPulseIcon } from "lucide-react";
+import Link from "next/link";
 
 export default async function page() {
   const medico = await prisma.medicos.findUnique({
@@ -39,7 +34,9 @@ export default async function page() {
     <div className="container mx-auto max-w-[1100px]">
       <header className="flex justify-between items-center py-8">
         <div className="flex gap-2 items-center">
-          <p className="font-mono text-3xl text-violet-800">MED-GUARD</p>
+          <Link href={"/"} className="font-mono text-3xl text-violet-800">
+            MED-GUARD
+          </Link>
           <HeartPulseIcon className="text-violet-800 w-8 h-8" />
         </div>
         <PerfilPopover medico={medico} />
