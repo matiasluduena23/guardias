@@ -33,6 +33,7 @@ export async function addGuardia(state: FormState, formData: FormData) {
   const estado: Estado = validateFields.data.medicosId ? "ASIGNADO" : "VACANTE";
 
   const data = { ...validateFields.data, estado };
+  if (data.medicosId === "") delete data.medicosId;
 
   console.log("data", data);
   try {
@@ -78,9 +79,9 @@ export async function confimarSolicitud(idSolicitud: string) {
         estado: "ASIGNADO",
       },
     });
-    revalidatePath("/panel");
-    redirect("/panel");
   } catch (error) {
     console.log("Error updating solicitud and guardia", error);
   }
+  revalidatePath("/panel");
+  redirect("/panel");
 }
