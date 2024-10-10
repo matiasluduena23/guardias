@@ -8,10 +8,19 @@ import { PropsAtt } from "@/lib/definitions";
 import { cn } from "@/lib/utils";
 import { Half1Icon } from "@radix-ui/react-icons";
 import Image from "next/image";
+import Link from "next/link";
 
 export function GuardiaPopover(eventInfo: any) {
-  const { medico, image, sector, valor, descripcion, horas, estado }: PropsAtt =
-    eventInfo.event.extendedProps;
+  const {
+    medico,
+    image,
+    sector,
+    valor,
+    descripcion,
+    horas,
+    estado,
+    idGuardia,
+  }: PropsAtt = eventInfo.event.extendedProps;
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -63,7 +72,14 @@ export function GuardiaPopover(eventInfo: any) {
             })}
           </strong>
 
-          <Button className="block">Editar</Button>
+          {!medico && (
+            <Button className="block">
+              <Link href={`/panel/${idGuardia}`}>Ver Solicitudes</Link>
+            </Button>
+          )}
+          <Button variant={"outline"} className="block">
+            Editar
+          </Button>
         </div>
       </PopoverContent>
     </Popover>

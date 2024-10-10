@@ -1,34 +1,57 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { createSolicitud } from "@/lib/actions";
 import { PropsAtt } from "@/lib/definitions";
 import { cn } from "@/lib/utils";
 
 export function ProfesionalPopover(eventInfo: any) {
-  const { profesional, sector, valor, descripcion, horas, estado }: PropsAtt =
-    eventInfo.event.extendedProps;
+  const {
+    idGuardia,
+    idMedico,
+    sector,
+    valor,
+    descripcion,
+    horas,
+    estado,
+    estadoSolicitud,
+  }: PropsAtt = eventInfo.event.extendedProps;
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button
-          className={cn(
-            `flex gap-1 px-1 justify-start cursor-pointer  w-full h-auto bg-green-500 hover:bg-green-400`,
-            estado === "VACANTE" && "bg-orange-500 hover:bg-orange-400",
-            estado === "PENDIENTE" && "bg-yellow-500 hover:bg-yellow-400"
-          )}
-        >
-          <b>{eventInfo.event._def.title}</b>
-        </Button>
+        {estadoSolicitud ? (
+          <Button
+            className={cn(
+              `flex flex-col gap-1 px-1 justify-start cursor-pointer  w-full h-auto bg-green-500 hover:bg-green-400`,
+              estadoSolicitud === "PENDIENTE" &&
+                "bg-yellow-500 hover:bg-yellow-400",
+              estadoSolicitud === "RECHAZADA" && "bg-rose-500 hover:bg-rose-400"
+            )}
+          >
+            <b>{estadoSolicitud}</b>
+          </Button>
+        ) : (
+          <Button
+            className={cn(
+              `flex flex-col gap-1 px-1 justify-start cursor-pointer  w-full h-auto bg-green-500 hover:bg-green-400`,
+              estado === "VACANTE" && "bg-orange-500 hover:bg-orange-400"
+            )}
+          >
+            <b>{estado}</b>
+          </Button>
+        )}
       </PopoverTrigger>
       <PopoverContent>
         <span className="bg-green-500 text-white p-1 rounded-xl text-[12px] leading-loose">
           {sector}
         </span>
         <div className="space-y-2 ">
-          <h1 className="font-semibold ">{profesional}</h1>
+          {/* <h1 className="font-semibold ">{medico}</h1> */}
 
           <p>
             Desde:
@@ -49,7 +72,26 @@ export function ProfesionalPopover(eventInfo: any) {
             })}
           </strong>
 
-          {!profesional && <Button className="block">Publicar</Button>}
+          {estadoSolicitud ? (
+            <p>Esperando respuesta de la institucion</p>
+          ) : (
+            <>
+              {estado === "ASIGNADO" ? (
+                <Button variant={"destructive"} className="block">
+                  Revocar
+                </Button>
+              ) : (
+                <Button
+                  className="block"
+                  onClick={async () =>
+                    await createSolicitud(idMedico, idGuardia)
+                  }
+                >
+                  Solicitar
+                </Button>
+              )}
+            </>
+          )}
         </div>
       </PopoverContent>
     </Popover>

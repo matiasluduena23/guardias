@@ -1,13 +1,21 @@
 "use client";
-import { Guardias } from "@prisma/client";
+import { Guardias, Medicos, Solicitudes } from "@prisma/client";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid"; // a plugin!
-import { eventFormat } from "@/lib/utils";
+import { eventFormatMedico } from "@/lib/utils";
 import { ProfesionalPopover } from "./profesional-popover";
+import { MedicoContext } from "../context/MedicoProvider";
+import { useContext } from "react";
 
-export default function Calendar({ events }: { events: Guardias[] }) {
-  const eventFormated = eventFormat(events);
-  console.log(eventFormated);
+export default function Calendar({
+  events,
+  solicitudes,
+}: {
+  events: Guardias[];
+  solicitudes: Solicitudes[];
+}) {
+  const medico = useContext(MedicoContext) as Medicos;
+  const eventFormated = eventFormatMedico(events, medico, solicitudes);
   return (
     <section className="w-full">
       <FullCalendar

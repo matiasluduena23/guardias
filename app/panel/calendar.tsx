@@ -1,5 +1,5 @@
 "use client";
-import { Guardias, Medicos } from "@prisma/client";
+import { Guardias, Medicos, Solicitudes } from "@prisma/client";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid"; // a plugin!
 import { GuardiaPopover } from "./guardia-popover";
@@ -8,11 +8,13 @@ import { eventFormat } from "@/lib/utils";
 export default function Calendar({
   events,
   medicos,
+  solicitudes,
 }: {
   events: Guardias[];
   medicos: Medicos[];
+  solicitudes: Solicitudes[];
 }) {
-  const eventFormated = eventFormat(events, medicos);
+  const eventFormated = eventFormat(events, medicos, solicitudes);
   return (
     <section className="w-full">
       <FullCalendar

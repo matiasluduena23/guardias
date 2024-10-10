@@ -31,11 +31,14 @@ export type EventCalendarT = {
 };
 
 export type PropsAtt = {
+  idMedico: string;
+  idGuardia: string;
   medico: string;
   image: string;
   sector: string;
   valor: number;
   descripcion: string;
   horas: number;
-  estado: "VACANTE" | "ASIGNADA";
+  estado: "VACANTE" | "ASIGNADO";
+  estadoSolicitud: "PENDIENTE" | "APROBADA" | "RECHAZADA";
 };
