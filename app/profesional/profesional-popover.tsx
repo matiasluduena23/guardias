@@ -73,7 +73,11 @@ export function ProfesionalPopover(eventInfo: any) {
           </strong>
 
           {estadoSolicitud ? (
-            <p>Esperando respuesta de la institucion</p>
+            <>
+              {estadoSolicitud === "PENDIENTE" && (
+                <p>Esperando respuesta de la institucion</p>
+              )}
+            </>
           ) : (
             <>
               {estado === "ASIGNADO" ? (
