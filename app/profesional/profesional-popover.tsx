@@ -7,10 +7,10 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { createSolicitud } from "@/lib/actions";
-import { PropsAtt } from "@/lib/definitions";
+import { Event } from "@/lib/definitions";
 import { cn } from "@/lib/utils";
 
-export function ProfesionalPopover(eventInfo: any) {
+export function ProfesionalPopover(eventInfo: Event) {
   const {
     idGuardia,
     idMedico,
@@ -19,7 +19,7 @@ export function ProfesionalPopover(eventInfo: any) {
 
     estado,
     estadoSolicitud,
-  }: PropsAtt = eventInfo.event.extendedProps;
+  } = eventInfo.event.extendedProps;
   return (
     <Popover>
       <PopoverTrigger asChild>

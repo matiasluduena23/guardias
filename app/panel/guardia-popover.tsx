@@ -4,13 +4,13 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { PropsAtt } from "@/lib/definitions";
+import { Event } from "@/lib/definitions";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 
-export function GuardiaPopover(eventInfo: any) {
-  const { medico, image, sector, valor, estado, idGuardia }: PropsAtt =
+export function GuardiaPopover(eventInfo: Event) {
+  const { medico, image, sector, valor, estado, idGuardia } =
     eventInfo.event.extendedProps;
   return (
     <Popover>

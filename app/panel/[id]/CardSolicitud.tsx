@@ -13,8 +13,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { GuardiaSolicitudesT } from "@/lib/definitions";
 
-export default function CardSolicitud({ guardia }: { guardia: any }) {
+export default function CardSolicitud({
+  guardia,
+}: {
+  guardia: GuardiaSolicitudesT;
+}) {
   return (
     <div className="max-w-[600px] mx-auto">
       <Card className="p-8">
@@ -42,17 +47,18 @@ export default function CardSolicitud({ guardia }: { guardia: any }) {
         </CardHeader>
 
         <CardContent>
-          {guardia?.Solicitudes.lenght > 0 ? (
+          {guardia.Solicitudes.length > 0 ? (
             <>
-              {guardia?.Solicitudes.map((item: any, index: number) => (
+              {" "}
+              {guardia?.Solicitudes.map((item) => (
                 <Card
-                  key={index}
+                  key={item.id}
                   className="border p-4 flex justify-between items-center"
                 >
                   <div className="flex items-center gap-4">
                     <Image
-                      src={item.Medicos?.imagen!}
-                      alt={item.Medicos?.apellido!}
+                      src={item.Medicos?.imagen || ""}
+                      alt={item.Medicos?.apellido || "medico profile"}
                       width={30}
                       height={30}
                       className="rounded-full object-cover"
@@ -69,8 +75,8 @@ export default function CardSolicitud({ guardia }: { guardia: any }) {
               ))}
             </>
           ) : (
-            <p className="text-center text-gray-400 font-semibold">
-              No hay solicitudes enviadas para esta guardia.
+            <p className="text-center text-gray-500">
+              No hay Solicitudes enviadas para esta guardia.
             </p>
           )}
         </CardContent>

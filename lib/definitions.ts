@@ -1,4 +1,5 @@
 import z from "zod";
+import { Guardias, Medicos, Solicitudes } from "@prisma/client";
 
 export type GuardiaT = {
   sector: string;
@@ -30,15 +31,31 @@ export type EventCalendarT = {
   end: Date;
 };
 
-export type PropsAtt = {
-  idMedico: string;
-  idGuardia: string;
-  medico: string;
-  image: string;
-  sector: string;
-  valor: number;
-  descripcion: string;
-  horas: number;
-  estado: "VACANTE" | "ASIGNADO";
-  estadoSolicitud: "PENDIENTE" | "APROBADA" | "RECHAZADA";
+export type Event = {
+  event: {
+    _def: {
+      title: string;
+    };
+    start: Date;
+    end: Date;
+    extendedProps: {
+      idMedico: string;
+      idGuardia: string;
+      medico: string;
+      image: string;
+      sector: string;
+      valor: number;
+      descripcion: string;
+      horas: number;
+      estado: "VACANTE" | "ASIGNADO";
+      estadoSolicitud: "PENDIENTE" | "APROBADA" | "RECHAZADA";
+    };
+  };
 };
+
+export interface SolicitudWithMedico extends Solicitudes {
+  Medicos: Medicos | null;
+}
+export interface GuardiaSolicitudesT extends Guardias {
+  Solicitudes: SolicitudWithMedico[];
+}
