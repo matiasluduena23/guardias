@@ -12,26 +12,29 @@ export function eventFormat(
   medicos: Medicos[],
   solicitudes: Solicitudes[]
 ) {
-  const eventFormat: EventCalendarT[] = events.map((item) => {
+  const medicosMap = new Map(medicos.map((m) => [m.id, m]));
+  const solicitudesMap = new Map(solicitudes.map((s) => [s.guardiaId, s]));
+
+  const formattedEvents: EventCalendarT[] = events.map((item) => {
     const endDay = new Date(item.inicio);
-    endDay.setHours(item.inicio.getHours() + item.horas);
-    const medico = item.medicosId
-      ? medicos.find((m) => m.id === item.medicosId)
-      : undefined;
+    endDay.setHours(endDay.getHours() + item.horas);
+
+    const medico = item.medicosId ? medicosMap.get(item.medicosId) : undefined;
     const nombreCompleto = medico
       ? `${medico.nombre} ${medico.apellido}`
       : undefined;
-    const solicitud = solicitudes.find((s) => s.guardiaId === item.id);
+    const solicitud = solicitudesMap.get(item.id);
+
     return {
       id: item.id,
-      title: nombreCompleto ? nombreCompleto : "Vacante",
+      title: nombreCompleto ?? "Vacante",
       start: item.inicio,
       end: endDay,
       extendedProps: {
         idMedico: medico?.id,
         idGuardia: item.id,
-        medico: nombreCompleto ? nombreCompleto : "",
-        image: medico ? medico.imagen : "",
+        medico: nombreCompleto ?? "",
+        image: medico?.imagen ?? "",
         sector: item.sector,
         valor: item.valor,
         descripcion: item.descripcion,
@@ -41,7 +44,8 @@ export function eventFormat(
       },
     };
   });
-  return eventFormat;
+
+  return formattedEvents;
 }
 
 export function eventFormatMedico(
