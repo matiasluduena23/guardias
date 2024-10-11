@@ -9,7 +9,7 @@ import Link from "next/link";
 export default async function page() {
   const medico = await prisma.medicos.findUnique({
     where: {
-      id: "kssjjk",
+      id: "kjjssk",
     },
   });
 
