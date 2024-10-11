@@ -22,7 +22,7 @@ export default async function page() {
     where: {
       OR: [
         {
-          medicosId: "jkdsfisdf9",
+          medicosId: "kssjjk",
         },
         {
           estado: "VACANTE",
