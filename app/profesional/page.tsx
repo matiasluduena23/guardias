@@ -9,14 +9,14 @@ import Link from "next/link";
 export default async function page() {
   const medico = await prisma.medicos.findUnique({
     where: {
-      id: "jkdsfisdf9",
+      id: "kssjjk",
     },
   });
 
   if (!medico) throw new Error("Error cargando el medico");
 
   const solicitudes = await prisma.solicitudes.findMany({
-    where: { medicosId: "jkdsfisdf9" },
+    where: { medicosId: "kssjjk" },
   });
   const events = await prisma.guardias.findMany({
     where: {

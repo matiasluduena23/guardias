@@ -20,6 +20,7 @@ export function ProfesionalPopover(eventInfo: Event) {
     estado,
     estadoSolicitud,
   } = eventInfo.event.extendedProps;
+  console.log(eventInfo);
   return (
     <Popover>
       <PopoverTrigger asChild>
